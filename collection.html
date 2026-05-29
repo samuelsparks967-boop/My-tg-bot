@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Коллекция - Telegram Web App</title>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #9d4edd;
+            --bg-dark: #09090b;
+            --card-bg: rgba(22, 20, 24, 0.85);
+            --text-main: #ffffff;
+            --text-secondary: #8b8b93;
+            --safe-area-bottom: env(safe-area-inset-bottom, 20px);
+            --safe-area-top: calc(env(safe-area-inset-top, 24px) + 20px);
+            --vh: 1vh; 
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* --- Фон --- */
+        .bg-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(var(--vh, 1vh) * 100);
+            background: radial-gradient(circle at 50% -20%, #3b1d5c 0%, #09090b 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.4; /* Чуть темнее для страницы коллекции */
+            transition: opacity 0.5s ease;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: var(--safe-area-top) 5vw 130px 5vw;
+            position: relative;
+            min-height: calc(var(--vh, 1vh) * 100);
+        }
+
+        @keyframes slideInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .anim-element { animation: slideInUp 0.5s ease-out backwards; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        /* --- Шапка страницы коллекции --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5vh;
+        }
+
+        .page-title {
+            font-size: clamp(28px, 8vw, 36px);
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            transition: transform 0.1s, color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon-btn:active { transform: scale(0.85); color: var(--text-main); }
+        .icon-btn svg { width: clamp(24px, 6.5vw, 28px); height: clamp(24px, 6.5vw, 28px); }
+
+        /* --- Вкладки (Tabs) --- */
+        .tabs {
+            display: flex;
+            gap: 6vw;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 3vh;
+        }
+
+        .tab {
+            padding-bottom: 12px;
+            font-size: clamp(15px, 4.5vw, 18px);
+            font-weight: 500;
+            color: var(--text-secondary);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba(157, 78, 221, 0.6);
+        }
+
+        /* --- Общая карточка --- */
+        .card { 
+            background-color: var(--card-bg); 
+            border-radius: 20px; 
+            padding: clamp(16px, 5vw, 24px); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.03); 
+        }
+
+        /* --- Карточка статистики --- */
+        .stats-card {
+            display: flex;
+            margin-bottom: 4vh;
+        }
+
+        .stats-left {
+            flex: 1.5;
+            padding-right: 4vw;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stats-right {
+            flex: 1;
+            padding-left: 4vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stats-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .stats-icon {
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .stats-label {
+            font-size: clamp(12px, 3.5vw, 14px);
+            color: var(--text-secondary);
+        }
+
+        .stats-value {
+            font-size: clamp(22px, 6.5vw, 28px);
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .stats-value span {
+            color: var(--text-secondary);
+            font-size: clamp(16px, 5vw, 20px);
+            font-weight: 500;
+        }
+
+        .progress-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .simple-progress {
+            height: 6px; 
+            background-color: rgba(255, 255, 255, 0.1); 
+            border-radius: 3px; 
+            overflow: hidden; 
+            flex-grow: 1;
+        }
+
+        .simple-progress-fill { 
+            height: 100%; 
+            width: 31%; 
+            background-color: var(--primary-color); 
+            border-radius: 3px; 
+            box-shadow: 0 0 8px rgba(157, 78, 221, 0.5); 
+        }
+
+        .progress-percent {
+            font-size: clamp(11px, 3vw, 13px);
+            color: var(--text-secondary);
+        }
+
+        .stats-right .stats-value {
+            color: var(--primary-color);
+            margin-bottom: 0;
+            font-size: clamp(24px, 7vw, 32px);
+        }
+
+        /* --- Заголовок секции "Ваши карты" --- */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2vh;
+        }
+
+        .section-header h2 {
+            font-size: clamp(18px, 5.5vw, 24px);
+            font-weight: 600;
+        }
+
+        .filter-btn {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: clamp(12px, 3.5vw, 14px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .filter-btn:active {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- Сетка карточек --- */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4vw;
+            margin-bottom: 4vh;
+        }
+
+        .collection-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            aspect-ratio: 3 / 4; /* Пропорция карточки */
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: clamp(10px, 3vw, 16px);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .collection-card:active { transform: scale(0.97); }
+
+        /* Картинка карточки (фон) */
+        .card-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        /* Темный градиент снизу для читаемости текста */
+        .card-gradient {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background: linear-gradient(to top, rgba(9, 9, 11, 1) 0%, rgba(9, 9, 11, 0.7) 40%, transparent 100%);
+            z-index: 1;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-rarity-icon {
+            position: absolute;
+            top: clamp(10px, 3vw, 16px);
+            right: clamp(10px, 3vw, 16px);
+            z-index: 2;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 0 4px rgba(0,0,0,0.5));
+        }
+
+        .card-title {
+            font-size: clamp(14px, 4vw, 18px);
+            font-weight: 600;
+            margin-bottom: 6px;
+            line-height: 1.2;
+        }
+
+        .card-badge {
+            display: inline-block;
+            background-color: rgba(157, 78, 221, 0.15);
+            color: var(--primary-color);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: clamp(10px, 2.5vw, 12px);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .card-count {
+            font-size: clamp(12px, 3vw, 14px);
+            color: var(--text-secondary);
+        }
+        .card-count span { color: var(--primary-color); font-weight: 500; }
+
+        /* Закрытая карточка */
+        .collection-card.locked {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: rgba(22, 20, 24, 0.5);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+        
+        .lock-icon-wrapper {
+            width: clamp(40px, 12vw, 50px);
+            height: clamp(40px, 12vw, 50px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .locked-title {
+            font-size: clamp(14px, 4vw, 16px);
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+        .locked-subtitle {
+            font-size: clamp(11px, 3vw, 13px);
+            color: var(--text-secondary);
+        }
+
+        /* --- Нижний баннер --- */
+        .bottom-banner {
+            display: flex;
+            align-items: center;
+            gap: 4vw;
+            padding: clamp(16px, 5vw, 20px);
+            margin-bottom: 2vh;
+            cursor: pointer;
+        }
+        .bottom-banner:active { transform: scale(0.98); }
+        
+        .banner-icon {
+            width: clamp(40px, 11vw, 48px);
+            height: clamp(40px, 11vw, 48px);
+            border-radius: 50%;
+            background-color: rgba(157, 78, 221, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+        
+        .banner-text h3 {
+            font-size: clamp(13px, 3.8vw, 16px);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .banner-text p {
+            font-size: clamp(11px, 3vw, 13px);
+            color: var(--text-secondary);
+        }
+        
+        .banner-arrow {
+            margin-left: auto;
+            color: var(--text-secondary);
+        }
+
+        /* --- Нижняя навигация (Без изменений) --- */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background-color: rgba(18, 16, 20, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding: 12px 0 calc(12px + var(--safe-area-bottom)); border-top: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px 24px 0 0; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-secondary); text-decoration: none; font-size: clamp(10px, 3vw, 12px); font-weight: 500; position: relative; cursor: pointer; transition: color 0.3s ease; }
+        .nav-icon { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .nav-item.active { color: var(--primary-color); }
+        .nav-item::after { content: ''; position: absolute; bottom: -10px; width: 0; height: 3px; background-color: var(--primary-color); border-radius: 2px; box-shadow: 0 0 5px rgba(157, 78, 221, 0.5); transition: width 0.3s ease; }
+        .nav-item.active::after { width: 24px; }
+    </style>
+</head>
+<body>
+
+<div class="bg-layer">
+    <!-- Тот самый фон bg.jpg из твоего проекта -->
+    <img src="./bg.jpg" alt="bg" class="bg-image" onerror="this.style.display='none'">
+</div>
+
+<div class="app-container">
+    
+    <!-- Шапка страницы -->
+    <div class="page-header anim-element">
+        <h1 class="page-title">Коллекция</h1>
+        <button class="icon-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Вкладки -->
+    <div class="tabs anim-element delay-1">
+        <div class="tab active">Карты</div>
+        <!-- Сюда можно добавить другие вкладки, если нужно -->
+    </div>
+
+    <!-- Статистика -->
+    <div class="card stats-card anim-element delay-2">
+        <div class="stats-left">
+            <div class="stats-header">
+                <div class="stats-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="6" width="16" height="16" rx="2"></rect>
+                        <path d="M6 2h16v16"></path>
+                        <polygon points="10 14 11 11 14 11 11.5 9 12.5 6 10 8 7.5 6 8.5 9 6 11 9 11 10 14" fill="currentColor"></polygon>
+                    </svg>
+                </div>
+                <div class="stats-label">Собрано карт</div>
+            </div>
+            <div class="stats-value">17 <span>/ 54</span></div>
+            <div class="progress-row">
+                <div class="simple-progress"><div class="simple-progress-fill"></div></div>
+                <div class="progress-percent">31%</div>
+            </div>
+        </div>
+        <div class="stats-right">
+            <div class="stats-header">
+                <div class="stats-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+                <div class="stats-label">Редкие карты</div>
+            </div>
+            <div class="stats-value">4</div>
+        </div>
+    </div>
+
+    <!-- Заголовок и фильтр -->
+    <div class="section-header anim-element delay-3">
+        <h2>Ваши карты</h2>
+        <button class="filter-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            По редкости
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Сетка карточек -->
+    <div class="cards-grid anim-element delay-4">
+        
+        <!-- Карточка 1 -->
+        <div class="collection-card">
+            <!-- ЗДЕСЬ МЕНЯТЬ КАРТИНКУ (замени src на свой файл, например src="./card1.jpg") -->
+            <img src="https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=500&q=80" alt="card" class="card-image">
+            <div class="card-gradient"></div>
+            
+            <div class="card-rarity-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                </svg>
+            </div>
+            <div class="card-content">
+                <div class="card-title">Черный список</div>
+                <div class="card-badge">Легендарная</div>
+                <div class="card-count"><span>1</span> / 1</div>
+            </div>
+        </div>
+
+        <!-- Карточка 2 -->
+        <div class="collection-card">
+            <!-- ЗДЕСЬ МЕНЯТЬ КАРТИНКУ -->
+            <img src="https://images.unsplash.com/photo-1595015092042-4fdb190013b5?w=500&q=80" alt="card" class="card-image">
+            <div class="card-gradient"></div>
+            
+            <div class="card-rarity-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
+                </svg>
+            </div>
+            <div class="card-content">
+                <div class="card-title">VIP</div>
+                <div class="card-badge">Эпическая</div>
+                <div class="card-count"><span>1</span> / 1</div>
+            </div>
+        </div>
+
+        <!-- Карточка 3 -->
+        <div class="collection-card">
+            <!-- ЗДЕСЬ МЕНЯТЬ КАРТИНКУ -->
+            <img src="https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=500&q=80" alt="card" class="card-image">
+            <div class="card-gradient"></div>
+            
+            <div class="card-rarity-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                </svg>
+            </div>
+            <div class="card-content">
+                <div class="card-title">Коллекционер</div>
+                <div class="card-badge">Эпическая</div>
+                <div class="card-count"><span>1</span> / 1</div>
+            </div>
+        </div>
+
+        <!-- Карточка 4 (Закрытая) -->
+        <div class="collection-card locked">
+            <div class="lock-icon-wrapper">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <div class="locked-title">Не открыто</div>
+            <div class="locked-subtitle">Откройте условия</div>
+        </div>
+
+    </div>
+
+    <!-- Нижний инфо-баннер -->
+    <div class="card bottom-banner anim-element delay-5">
+        <div class="banner-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                <path d="M4 22h16"></path>
+                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
+            </svg>
+        </div>
+        <div class="banner-text">
+            <h3>Собирайте карты и открывайте новые</h3>
+            <p>Чем больше карт — тем выше уровень</p>
+        </div>
+        <div class="banner-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </div>
+    </div>
+
+</div>
+
+<!-- Нижняя навигация (Коллекция активна) -->
+<nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+        <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        Главная
+    </a>
+    <a href="javascript:void(0);" class="nav-item">
+        <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        Магазин
+    </a>
+    <a href="javascript:void(0);" class="nav-item active">
+        <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="6" width="16" height="16" rx="2"></rect>
+            <path d="M6 2h16v16"></path>
+        </svg>
+        Коллекция
+    </a>
+</nav>
+
+<script>
+    const setVh = () => {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    setVh();
+    window.addEventListener('resize', setVh);
+
+    try {
+        if (window.Telegram && window.Telegram.WebApp) {
+            const tg = window.Telegram.WebApp;
+            tg.expand();
+            tg.ready();
+            tg.setHeaderColor('#000000'); 
+            tg.setBackgroundColor('#000000');
+            tg.onEvent('viewportChanged', setVh);
+        }
+    } catch (e) { console.log(e); }
+
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        const icon = item.querySelector('.nav-icon');
+        
+        item.addEventListener('pointerdown', () => {
+            if(icon) icon.style.transform = 'scale(0.75)';
+        });
+        
+        const release = () => {
+            if(icon) icon.style.transform = 'scale(1)';
+            // Убрал автоматическое переключение активного класса здесь, 
+            // так как теперь вкладки должны вести на реальные страницы (href="...")
+        };
+
+        item.addEventListener('pointerup', release);
+        item.addEventListener('pointercancel', () => { if(icon) icon.style.transform = 'scale(1)'; });
+        item.addEventListener('pointerleave', () => { if(icon) icon.style.transform = 'scale(1)'; });
+    });
+</script>
+</body>
+</html>
