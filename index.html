@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Главная - Telegram Web App</title>
     
-    <script src="[https://telegram.org/js/telegram-web-app.js](https://telegram.org/js/telegram-web-app.js)"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <style>
         :root {
@@ -37,7 +37,6 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        /* Фоновый слой */
         .bg-layer {
             position: fixed;
             top: 0;
@@ -77,13 +76,11 @@
         .delay-3 { animation-delay: 0.3s; }
         .delay-4 { animation-delay: 0.4s; }
 
-        /* --- Шапка --- */
         .header { display: flex; justify-content: flex-end; margin-bottom: 3vh; }
         .icon-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px; transition: transform 0.1s, color 0.2s; }
         .icon-btn:active { transform: scale(0.85); color: var(--text-main); }
         .icon-btn svg { width: clamp(26px, 7vw, 32px); height: clamp(26px, 7vw, 32px); }
 
-        /* --- Профиль --- */
         .profile { display: flex; align-items: center; gap: 5vw; margin-bottom: 4vh; }
         
         .avatar-container {
@@ -102,7 +99,6 @@
         .badge-icon { display: flex; align-items: center; justify-content: center; background-color: var(--primary-color); border-radius: 4px; padding: 4px; }
         .badge-icon svg { width: 12px; height: 12px; }
 
-        /* --- Прогресс бар --- */
         .progress-section { margin-bottom: 3.5vh; }
         .progress-label { font-size: clamp(14px, 4vw, 16px); color: var(--text-secondary); margin-bottom: 14px; }
         .progress-bar-container { display: flex; align-items: center; gap: 3.5vw; }
@@ -111,7 +107,6 @@
         .segment.active { background-color: var(--primary-color); box-shadow: 0 0 12px rgba(157, 78, 221, 0.6); }
         .progress-value { font-size: clamp(18px, 5vw, 24px); font-weight: 600; color: var(--primary-color); }
 
-        /* --- Карточки --- */
         .card { 
             background-color: var(--card-bg); 
             border-radius: 24px; 
@@ -153,619 +148,6 @@
         @keyframes fillBar { from { width: 0; } to { width: 31%; } }
         .card-footer { font-size: clamp(12px, 3.5vw, 14px); color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
 
-        /* --- Нижняя навигация --- */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background-color: rgba(18, 16, 20, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding: 12px 0 calc(12px + var(--safe-area-bottom)); border-top: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px 24px 0 0; z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-secondary); text-decoration: none; font-size: clamp(10px, 3vw, 12px); font-weight: 500; position: relative; cursor: pointer; transition: color 0.3s ease; }
-        .nav-icon { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .nav-item.active { color: var(--primary-color); }
-        .nav-item::after { content: ''; position: absolute; bottom: -10px; width: 0; height: 3px; background-color: var(--primary-color); border-radius: 2px; box-shadow: 0 0 5px rgba(157, 78, 221, 0.5); transition: width 0.3s ease; }
-        .nav-item.active::after { width: 24px; }
-    </style>
-</head>
-<body>
-
-<div class="bg-layer">
-    <img src="./bg.jpg" alt="bg" class="bg-image" onerror="this.style.display='none'">
-</div>
-
-<div class="app-container">
-    
-    <!-- Шапка (только колокольчик) -->
-    <header class="header anim-element">
-        <button class="icon-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
-        </button>
-    </header>
-
-    <!-- Профиль (Увеличен в 1.5 раза) -->
-    <div class="profile anim-element delay-1">
-        <div class="avatar-container">
-            <img src="./avatar.jpg" alt="Адам" class="avatar" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)\' width=\'100\' height=\'100\'><rect width=\'100\' height=\'100\' fill=\'%23333333\'/><text x=\'50\' y=\'50\' font-family=\'sans-serif\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\' dy=\'.35em\'>А</text></svg>'">
-        </div>
-        <div class="profile-info">
-            <h1>Адам</h1>
-            <div class="badge">
-                Фанат 
-                <span class="badge-icon">
-                    <svg viewBox="0 0 24 24" fill="white">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Общий прогресс -->
-    <div class="progress-section anim-element delay-2">
-        <div class="progress-label">Ваш прогресс</div>
-        <div class="progress-bar-container">
-            <div class="segments">
-                <div class="segment active"></div><div class="segment active"></div><div class="segment active"></div><div class="segment active"></div>
-                <div class="segment active"></div><div class="segment active"></div><div class="segment active"></div><div class="segment active"></div>
-                <div class="segment"></div><div class="segment"></div>
-            </div>
-            <div class="progress-value">82%</div>
-        </div>
-    </div>
-
-    <!-- Карточка 1 -->
-    <div class="card anim-element delay-3">
-        <div class="card-header" style="margin-bottom: 0;">
-            <div class="icon-circle">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                    <path d="M9 14h6"></path>
-                    <path d="M9 10h6"></path>
-                    <path d="M9 18h6"></path>
-                </svg>
-            </div>
-            <div class="card-info">
-                <div class="card-info-label">До следующего уровня:</div>
-                <div class="card-info-value"><span>3</span> задания</div>
-            </div>
-        </div>
-        <button class="card-btn" style="margin-top: 16px;">
-            Задания
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-        </button>
-    </div>
-
-    <!-- Карточка 2 -->
-    <div class="card anim-element delay-4">
-        <div class="card-header" style="margin-bottom: 0;">
-            <div class="icon-circle">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="6" width="16" height="16" rx="2"></rect>
-                    <path d="M6 2h16v16"></path>
-                    <polygon points="10 14 11 11 14 11 11.5 9 12.5 6 10 8 7.5 6 8.5 9 6 11 9 11 10 14" fill="currentColor"></polygon>
-                </svg>
-            </div>
-            <div class="card-info">
-                <div class="card-info-label">Собрано карт</div>
-                <div class="card-info-value"><span>17</span> <span style="color:var(--text-secondary); font-size:clamp(18px, 6vw, 24px);">/ 54</span></div>
-            </div>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-        </div>
-        
-        <div class="simple-progress"><div class="simple-progress-fill"></div></div>
-        
-        <div class="card-footer">
-            Продолжайте собирать коллекцию
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2v20"></path>
-                <path d="M2 12h20"></path>
-                <path d="m19 5-14 14"></path>
-                <path d="m5 5 14 14"></path>
-            </svg>
-        </div>
-    </div>
-</div>
-
-<!-- Нижняя навигация -->
-<nav class="bottom-nav">
-    <a href="index.html" class="nav-item active">
-        <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-        </svg>
-        Главная
-    </a>
-    <a href="javascript:void(0);" class="nav-item">
-        <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <path d="M16 10a4 4 0 0 1-8 0"></path>
-        </svg>
-        Магазин
-    </a>
-    <a href="collection.html" class="nav-item">
-        <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="6" width="16" height="16" rx="2"></rect>
-            <path d="M6 2h16v16"></path>
-        </svg>
-        Коллекция
-    </a>
-</nav>
-
-<script>
-    const setVh = () => {
-        let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-    };
-    setVh();
-    window.addEventListener('resize', setVh);
-
-    try {
-        if (window.Telegram && window.Telegram.WebApp) {
-            const tg = window.Telegram.WebApp;
-            tg.expand();
-            tg.ready();
-            tg.setHeaderColor('#000000'); 
-            tg.setBackgroundColor('#000000');
-            tg.onEvent('viewportChanged', setVh);
-        }
-    } catch (e) { console.log(e); }
-
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => {
-        const icon = item.querySelector('.nav-icon');
-        
-        item.addEventListener('pointerdown', () => {
-            if(icon) icon.style.transform = 'scale(0.75)';
-        });
-        
-        const release = () => {
-            if(icon) icon.style.transform = 'scale(1)';
-        };
-
-        item.addEventListener('pointerup', release);
-        item.addEventListener('pointercancel', () => { if(icon) icon.style.transform = 'scale(1)'; });
-        item.addEventListener('pointerleave', () => { if(icon) icon.style.transform = 'scale(1)'; });
-    });
-</script>
-</body>
-</html>
-
-
-```
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        /* Фоновый слой */
-        .bg-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: calc(var(--vh, 1vh) * 100);
-            background: radial-gradient(circle at 50% -20%, #3b1d5c 0%, #09090b 70%);
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .bg-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.5;
-            transition: opacity 0.5s ease;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: var(--safe-area-top) 5vw 130px 5vw;
-            position: relative;
-            min-height: calc(var(--vh, 1vh) * 100);
-        }
-
-        @keyframes slideInUp {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .anim-element { animation: slideInUp 0.5s ease-out backwards; }
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
-
-        /* --- Шапка --- */
-        .header { display: flex; justify-content: flex-end; margin-bottom: 3vh; }
-        .icon-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px; transition: transform 0.1s, color 0.2s; }
-        .icon-btn:active { transform: scale(0.85); color: var(--text-main); }
-        .icon-btn svg { width: clamp(26px, 7vw, 32px); height: clamp(26px, 7vw, 32px); }
-
-        /* --- Профиль --- */
-        .profile { display: flex; align-items: center; gap: 5vw; margin-bottom: 4vh; }
-        
-        .avatar-container {
-            width: clamp(120px, 33vw, 165px); 
-            height: clamp(120px, 33vw, 165px);
-            flex-shrink: 0;
-            border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.1);
-            background-color: #222; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .avatar { width: 100%; height: 100%; object-fit: cover; }
-        
-        .profile-info { display: flex; flex-direction: column; gap: 6px; }
-        .profile-info h1 { font-size: clamp(28px, 8vw, 38px); font-weight: 700; margin: 0; line-height: 1.1; }
-        .badge { display: inline-flex; align-items: center; gap: 6px; color: var(--primary-color); font-size: clamp(14px, 4vw, 18px); font-weight: 500; }
-        .badge-icon { display: flex; align-items: center; justify-content: center; background-color: var(--primary-color); border-radius: 4px; padding: 4px; }
-        .badge-icon svg { width: 12px; height: 12px; }
-
-        /* --- Прогресс бар --- */
-        .progress-section { margin-bottom: 3.5vh; }
-        .progress-label { font-size: clamp(14px, 4vw, 16px); color: var(--text-secondary); margin-bottom: 14px; }
-        .progress-bar-container { display: flex; align-items: center; gap: 3.5vw; }
-        .segments { display: flex; gap: 1.5vw; flex-grow: 1; }
-        .segment { height: 10px; flex: 1; background-color: rgba(255, 255, 255, 0.15); border-radius: 5px; }
-        .segment.active { background-color: var(--primary-color); box-shadow: 0 0 12px rgba(157, 78, 221, 0.6); }
-        .progress-value { font-size: clamp(18px, 5vw, 24px); font-weight: 600; color: var(--primary-color); }
-
-        /* --- Карточки --- */
-        .card { 
-            background-color: var(--card-bg); 
-            border-radius: 24px; 
-            padding: clamp(20px, 6vw, 30px); 
-            margin-bottom: 2.5vh; 
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255, 255, 255, 0.03); 
-            display: block; 
-        }
-        .card-header { display: flex; align-items: center; gap: 4vw; margin-bottom: 20px; }
-        
-        .icon-circle { 
-            width: clamp(52px, 14vw, 68px); 
-            height: clamp(52px, 14vw, 68px); 
-            border-radius: 50%; background-color: rgba(157, 78, 221, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-color); flex-shrink: 0; border: 1px solid rgba(157, 78, 221, 0.2); 
-        }
-        .icon-circle svg { width: clamp(24px, 6vw, 30px); height: clamp(24px, 6vw, 30px); }
-        
-        .card-info { flex-grow: 1; }
-        .card-info-label { font-size: clamp(14px, 4vw, 16px); color: var(--text-secondary); margin-bottom: 8px; }
-        .card-info-value { font-size: clamp(24px, 7vw, 32px); font-weight: 600; }
-        .card-info-value span { color: var(--primary-color); }
-
-        .card-btn { 
-            display: flex; justify-content: center; align-items: center; width: 100%; 
-            background-color: rgba(157, 78, 221, 0.15); color: #fff; border: none; 
-            border-radius: 16px; 
-            padding: clamp(16px, 5vw, 22px); 
-            font-size: clamp(16px, 4.5vw, 20px); 
-            font-weight: 600; cursor: pointer; position: relative; transition: background-color 0.2s, transform 0.1s; 
-        }
-        .card-btn:active { background-color: rgba(157, 78, 221, 0.25); transform: scale(0.98); }
-        .card-btn .chevron { position: absolute; right: 20px; color: var(--text-secondary); width: 22px; height: 22px; }
-        .card-header .chevron { margin-left: auto; color: var(--text-secondary); width: 22px; height: 22px; }
-
-        .simple-progress { height: 6px; background-color: rgba(255, 255, 255, 0.1); border-radius: 3px; margin: 3vh 0 2vh 0; overflow: hidden; width: 100%; }
-        .simple-progress-fill { height: 100%; width: 31%; background-color: var(--primary-color); border-radius: 3px; box-shadow: 0 0 8px rgba(157, 78, 221, 0.5); animation: fillBar 1s ease-out backwards; animation-delay: 0.6s; }
-        @keyframes fillBar { from { width: 0; } to { width: 31%; } }
-        .card-footer { font-size: clamp(12px, 3.5vw, 14px); color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
-
-        /* --- Нижняя навигация --- */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background-color: rgba(18, 16, 20, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding: 12px 0 calc(12px + var(--safe-area-bottom)); border-top: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px 24px 0 0; z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-secondary); text-decoration: none; font-size: clamp(10px, 3vw, 12px); font-weight: 500; position: relative; cursor: pointer; transition: color 0.3s ease; }
-        .nav-icon { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .nav-item.active { color: var(--primary-color); }
-        .nav-item::after { content: ''; position: absolute; bottom: -10px; width: 0; height: 3px; background-color: var(--primary-color); border-radius: 2px; box-shadow: 0 0 5px rgba(157, 78, 221, 0.5); transition: width 0.3s ease; }
-        .nav-item.active::after { width: 24px; }
-    </style>
-</head>
-<body>
-
-<div class="bg-layer">
-    <img src="./bg.jpg" alt="bg" class="bg-image" onerror="this.style.display='none'">
-</div>
-
-<div class="app-container">
-    
-    <!-- Шапка (только колокольчик) -->
-    <header class="header anim-element">
-        <button class="icon-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
-        </button>
-    </header>
-
-    <!-- Профиль (Увеличен в 1.5 раза) -->
-    <div class="profile anim-element delay-1">
-        <div class="avatar-container">
-            <img src="./avatar.jpg" alt="Адам" class="avatar" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\'><rect width=\'100\' height=\'100\' fill=\'%23333333\'/><text x=\'50\' y=\'50\' font-family=\'sans-serif\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\' dy=\'.35em\'>А</text></svg>'">
-        </div>
-        <div class="profile-info">
-            <h1>Адам</h1>
-            <div class="badge">
-                Фанат 
-                <span class="badge-icon">
-                    <svg viewBox="0 0 24 24" fill="white">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Общий прогресс -->
-    <div class="progress-section anim-element delay-2">
-        <div class="progress-label">Ваш прогресс</div>
-        <div class="progress-bar-container">
-            <div class="segments">
-                <div class="segment active"></div><div class="segment active"></div><div class="segment active"></div><div class="segment active"></div>
-                <div class="segment active"></div><div class="segment active"></div><div class="segment active"></div><div class="segment active"></div>
-                <div class="segment"></div><div class="segment"></div>
-            </div>
-            <div class="progress-value">82%</div>
-        </div>
-    </div>
-
-    <!-- Карточка 1 -->
-    <div class="card anim-element delay-3">
-        <div class="card-header" style="margin-bottom: 0;">
-            <div class="icon-circle">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                    <path d="M9 14h6"></path>
-                    <path d="M9 10h6"></path>
-                    <path d="M9 18h6"></path>
-                </svg>
-            </div>
-            <div class="card-info">
-                <div class="card-info-label">До следующего уровня:</div>
-                <div class="card-info-value"><span>3</span> задания</div>
-            </div>
-        </div>
-        <button class="card-btn" style="margin-top: 16px;">
-            Задания
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-        </button>
-    </div>
-
-    <!-- Карточка 2 -->
-    <div class="card anim-element delay-4">
-        <div class="card-header" style="margin-bottom: 0;">
-            <div class="icon-circle">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="6" width="16" height="16" rx="2"></rect>
-                    <path d="M6 2h16v16"></path>
-                    <polygon points="10 14 11 11 14 11 11.5 9 12.5 6 10 8 7.5 6 8.5 9 6 11 9 11 10 14" fill="currentColor"></polygon>
-                </svg>
-            </div>
-            <div class="card-info">
-                <div class="card-info-label">Собрано карт</div>
-                <div class="card-info-value"><span>17</span> <span style="color:var(--text-secondary); font-size:clamp(18px, 6vw, 24px);">/ 54</span></div>
-            </div>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-        </div>
-        
-        <div class="simple-progress"><div class="simple-progress-fill"></div></div>
-        
-        <div class="card-footer">
-            Продолжайте собирать коллекцию
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2v20"></path>
-                <path d="M2 12h20"></path>
-                <path d="m19 5-14 14"></path>
-                <path d="m5 5 14 14"></path>
-            </svg>
-        </div>
-    </div>
-</div>
-
-<!-- Нижняя навигация -->
-<nav class="bottom-nav">
-    <a href="index.html" class="nav-item active">
-        <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-        </svg>
-        Главная
-    </a>
-    <a href="javascript:void(0);" class="nav-item">
-        <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <path d="M16 10a4 4 0 0 1-8 0"></path>
-        </svg>
-        Магазин
-    </a>
-    <!-- Ссылка ведет на новую страницу коллекции -->
-    <a href="collection.html" class="nav-item">
-        <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="6" width="16" height="16" rx="2"></rect>
-            <path d="M6 2h16v16"></path>
-        </svg>
-        Коллекция
-    </a>
-</nav>
-
-<script>
-    const setVh = () => {
-        let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-    };
-    setVh();
-    window.addEventListener('resize', setVh);
-
-    try {
-        if (window.Telegram && window.Telegram.WebApp) {
-            const tg = window.Telegram.WebApp;
-            tg.expand();
-            tg.ready();
-            tg.setHeaderColor('#000000'); 
-            tg.setBackgroundColor('#000000');
-            tg.onEvent('viewportChanged', setVh);
-        }
-    } catch (e) { console.log(e); }
-
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => {
-        const icon = item.querySelector('.nav-icon');
-        
-        item.addEventListener('pointerdown', () => {
-            if(icon) icon.style.transform = 'scale(0.75)';
-        });
-        
-        const release = () => {
-            if(icon) icon.style.transform = 'scale(1)';
-        };
-
-        item.addEventListener('pointerup', release);
-        item.addEventListener('pointercancel', () => { if(icon) icon.style.transform = 'scale(1)'; });
-        item.addEventListener('pointerleave', () => { if(icon) icon.style.transform = 'scale(1)'; });
-    });
-</script>
-</body>
-</html>
-
-
-```
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        /* Фоновый слой */
-        .bg-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: calc(var(--vh, 1vh) * 100);
-            background: radial-gradient(circle at 50% -20%, #3b1d5c 0%, #09090b 70%);
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .bg-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.5;
-            transition: opacity 0.5s ease;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: var(--safe-area-top) 5vw 130px 5vw;
-            position: relative;
-            min-height: calc(var(--vh, 1vh) * 100);
-        }
-
-        @keyframes slideInUp {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .anim-element { animation: slideInUp 0.5s ease-out backwards; }
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
-
-        /* --- Шапка --- */
-        .header { display: flex; justify-content: flex-end; margin-bottom: 3vh; }
-        .icon-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px; transition: transform 0.1s, color 0.2s; }
-        .icon-btn:active { transform: scale(0.85); color: var(--text-main); }
-        .icon-btn svg { width: clamp(26px, 7vw, 32px); height: clamp(26px, 7vw, 32px); }
-
-        /* --- Профиль (УВЕЛИЧЕНО) --- */
-        .profile { display: flex; align-items: center; gap: 5vw; margin-bottom: 4vh; }
-        
-        .avatar-container {
-            /* Сделали аватарку сильно больше */
-            width: clamp(100px, 22vw, 110px); 
-            height: clamp(100px, 22vw, 110px);
-            flex-shrink: 0;
-            border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.1);
-            background-color: #222; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .avatar { width: 100%; height: 100%; object-fit: cover; }
-        
-        .profile-info { display: flex; flex-direction: column; gap: 6px; }
-        /* Имя стало больше */
-        .profile-info h1 { font-size: clamp(28px, 8vw, 38px); font-weight: 700; margin: 0; line-height: 1.1; }
-        .badge { display: inline-flex; align-items: center; gap: 6px; color: var(--primary-color); font-size: clamp(14px, 4vw, 18px); font-weight: 500; }
-        .badge-icon { display: flex; align-items: center; justify-content: center; background-color: var(--primary-color); border-radius: 4px; padding: 4px; }
-        .badge-icon svg { width: 12px; height: 12px; }
-
-        /* --- Прогресс бар (УВЕЛИЧЕНО) --- */
-        .progress-section { margin-bottom: 3.5vh; }
-        .progress-label { font-size: clamp(14px, 4vw, 16px); color: var(--text-secondary); margin-bottom: 14px; }
-        .progress-bar-container { display: flex; align-items: center; gap: 3.5vw; }
-        .segments { display: flex; gap: 1.5vw; flex-grow: 1; }
-        /* Сегменты стали толще */
-        .segment { height: 10px; flex: 1; background-color: rgba(255, 255, 255, 0.15); border-radius: 5px; }
-        .segment.active { background-color: var(--primary-color); box-shadow: 0 0 12px rgba(157, 78, 221, 0.6); }
-        .progress-value { font-size: clamp(18px, 5vw, 24px); font-weight: 600; color: var(--primary-color); }
-
-        /* --- Карточки (УВЕЛИЧЕНО) --- */
-        .card { 
-            background-color: var(--card-bg); 
-            border-radius: 24px; /* Более скругленные углы */
-            padding: clamp(20px, 6vw, 30px); /* Увеличенные отступы внутри карточки */
-            margin-bottom: 2.5vh; 
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255, 255, 255, 0.03); 
-            display: block; 
-        }
-        .card-header { display: flex; align-items: center; gap: 4vw; margin-bottom: 20px; }
-        
-        .icon-circle { 
-            /* Иконки слева стали больше */
-            width: clamp(52px, 14vw, 68px); 
-            height: clamp(52px, 14vw, 68px); 
-            border-radius: 50%; background-color: rgba(157, 78, 221, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-color); flex-shrink: 0; border: 1px solid rgba(157, 78, 221, 0.2); 
-        }
-        .icon-circle svg { width: clamp(24px, 6vw, 30px); height: clamp(24px, 6vw, 30px); }
-        
-        .card-info { flex-grow: 1; }
-        .card-info-label { font-size: clamp(14px, 4vw, 16px); color: var(--text-secondary); margin-bottom: 8px; }
-        /* Цифры в карточках стали больше */
-        .card-info-value { font-size: clamp(24px, 7vw, 32px); font-weight: 600; }
-        .card-info-value span { color: var(--primary-color); }
-
-        /* Кнопка "Задания" стала крупнее */
-        .card-btn { 
-            display: flex; justify-content: center; align-items: center; width: 100%; 
-            background-color: rgba(157, 78, 221, 0.15); color: #fff; border: none; 
-            border-radius: 16px; 
-            padding: clamp(16px, 5vw, 22px); 
-            font-size: clamp(16px, 4.5vw, 20px); 
-            font-weight: 600; cursor: pointer; position: relative; transition: background-color 0.2s, transform 0.1s; 
-        }
-        .card-btn:active { background-color: rgba(157, 78, 221, 0.25); transform: scale(0.98); }
-        .card-btn .chevron { position: absolute; right: 20px; color: var(--text-secondary); width: 22px; height: 22px; }
-        .card-header .chevron { margin-left: auto; color: var(--text-secondary); width: 22px; height: 22px; }
-
-        /* Прогресс во второй карточке стал толще */
-        .simple-progress { height: 6px; background-color: rgba(255, 255, 255, 0.1); border-radius: 3px; margin: 3vh 0 2vh 0; overflow: hidden; width: 100%; }
-        .simple-progress-fill { height: 100%; width: 31%; background-color: var(--primary-color); border-radius: 3px; box-shadow: 0 0 8px rgba(157, 78, 221, 0.5); animation: fillBar 1s ease-out backwards; animation-delay: 0.6s; }
-        @keyframes fillBar { from { width: 0; } to { width: 31%; } }
-        .card-footer { font-size: clamp(12px, 3.5vw, 14px); color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
-
-        /* --- Нижняя навигация (Без изменений) --- */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background-color: rgba(18, 16, 20, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding: 12px 0 calc(12px + var(--safe-area-bottom)); border-top: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px 24px 0 0; z-index: 100; }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-secondary); text-decoration: none; font-size: clamp(10px, 3vw, 12px); font-weight: 500; position: relative; cursor: pointer; transition: color 0.3s ease; }
         .nav-icon { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -877,7 +259,7 @@
 </div>
 
 <nav class="bottom-nav">
-    <a href="javascript:void(0);" class="nav-item active">
+    <a href="index.html" class="nav-item active">
         <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -892,7 +274,7 @@
         </svg>
         Магазин
     </a>
-    <a href="javascript:void(0);" class="nav-item">
+    <a href="collection.html" class="nav-item">
         <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="6" width="16" height="16" rx="2"></rect>
             <path d="M6 2h16v16"></path>
@@ -925,18 +307,16 @@
         const icon = item.querySelector('.nav-icon');
         
         item.addEventListener('pointerdown', () => {
-            icon.style.transform = 'scale(0.75)';
+            if(icon) icon.style.transform = 'scale(0.75)';
         });
         
         const release = () => {
-            icon.style.transform = 'scale(1)';
-            navItems.forEach(nav => nav.classList.remove('active'));
-            item.classList.add('active');
+            if(icon) icon.style.transform = 'scale(1)';
         };
 
         item.addEventListener('pointerup', release);
-        item.addEventListener('pointercancel', () => icon.style.transform = 'scale(1)');
-        item.addEventListener('pointerleave', () => icon.style.transform = 'scale(1)');
+        item.addEventListener('pointercancel', () => { if(icon) icon.style.transform = 'scale(1)'; });
+        item.addEventListener('pointerleave', () => { if(icon) icon.style.transform = 'scale(1)'; });
     });
 </script>
 </body>
